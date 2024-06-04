@@ -11,9 +11,9 @@ const ConnectButtonCst = () => {
                 openChainModal,
                 openConnectModal,
                 authenticationStatus,
-                mounted,
+                mounted, 
             }) => {
-                const ready = mounted && authenticationStatus !== 'loading';
+                const ready = mounted && authenticationStatus !== 'loading'; 
                 const connected =
                     ready && account && chain && (!authenticationStatus || authenticationStatus === 'authenticated');
                 return (

@@ -4,11 +4,12 @@ import MainLayout from './Layouts/MainLayout';
 import FarmsPage from './pages/FarmsPage';
 import DashBoardPage from './pages/DashBoardPage';
 import VaultDetail from './pages/VaultDetail';
+import Controller from './pages/Controller';
 
 const useRouterElements = () => {
     const routeElements = useRoutes([
         {
-            path: '',
+            path: '/',
             element: <MainLayout />,
             children: [
                 {
@@ -23,6 +24,14 @@ const useRouterElements = () => {
                     path: path.vaultDetail,
                     element: <VaultDetail />,
                 },
+                {
+                    path: '/',
+                    element: <FarmsPage />,
+                },
+                {
+                    path: path.controller,
+                    element: <Controller />,
+                }
             ],
         },
     ]);

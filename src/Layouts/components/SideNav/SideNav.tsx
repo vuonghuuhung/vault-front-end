@@ -23,6 +23,11 @@ const SideNav = () => {
             name: 'All Farms',
             to: path.farms,
         },
+        {
+            icon: <IconFarms />,
+            name: 'Controller',
+            to: path.controller,
+        }
     ];
 
     const listDoc = [
@@ -50,7 +55,7 @@ const SideNav = () => {
                     <div>
                         <IconLogo />
                     </div>
-                    <div className="text-[24px] ml-[22px] font-semibold">Harvest</div>
+                    <div className="text-[24px] ml-[22px] font-semibold">Vaults</div>
                 </Link>
                 <div className="my-[25px]">
                     <ConnectButtonCst />

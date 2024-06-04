@@ -1,28 +1,131 @@
-import {} from 'chart.js';
+import IconArrowDown from 'src/assets/IconArrowDown';
+import IconArrowUp from 'src/assets/IconArrowUp';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from 'src/components/ui/tabs';
+import Deposit from '../Deposit';
+import WithDraw from '../WithDraw';
+import Loading from 'src/components/Loading/Loading';
 
-const DetailsVault = () => {
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
+import { dataChartMock } from 'src/mock/dataChart.mock';
+import { VaultInfo } from 'src/types/vault.type';
+import { useSharePriceChart } from 'src/hooks/useSharePriceChart';
+
+const DetailsVault = ({ vaultDetail }: { vaultDetail: VaultInfo }) => {
+    const { historyInfo, isLoading } = useSharePriceChart(vaultDetail.vaultAddress);
+    console.log({ historyInfo });
+
+    const seeAddress = (address: string) => {
+        // open a new tab to see transaction
+        window.open(`https://app.tryethernal.com/address/${address}`);
+    };
+
     return (
-        <div>
-            <div className="grid grid-cols-4 gap-4 mv-[25px]">
-                <div className="boxContent p-6 h-[120px] flex justify-center flex-col col-span-1">
-                    <h3 className="text-[#d9d9d9] text-[14px] font-medium">Live APY</h3>
-                    <h2 className="text-[22px] font-semibold">451.60%</h2>
+        <>
+            {vaultDetail && (
+                <div>
+                    <div className="grid grid-cols-3 gap-4 mv-[25px]">
+                        <div className="boxContent p-6 h-[120px] flex justify-center flex-col col-span-1">
+                            <h3 className="text-[#d9d9d9] text-[14px] font-medium text-center">Live APY</h3>
+                            <h2 className="text-[22px] font-semibold text-center">{vaultDetail.estimatedAPY}%</h2>
+                        </div>
+                        <div className="boxContent p-6 h-[120px] flex justify-center flex-col col-span-1">
+                            <h3 className="text-[#d9d9d9] text-[14px] font-medium text-center">Daily APY</h3>
+                            <h2 className="text-[22px] font-semibold text-center">{vaultDetail.dailyAPY}%</h2>
+                        </div>
+                        <div className="boxContent p-6 h-[120px] flex justify-center flex-col col-span-1">
+                            <h3 className="text-[#d9d9d9] text-[14px] font-medium text-center">TVL</h3>
+                            <h2 className="text-[22px] font-semibold text-center">{vaultDetail.tvlUsd}</h2>
+                        </div>
+                    </div>
+                    <div className="mt-[25px] flex justify-center gap-6">
+                        <div className="w-[60%] h-[500px] boxContent py-10">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <AreaChart
+                                    width={500}
+                                    height={200}
+                                    data={dataChartMock}
+                                    syncId="anyId"
+                                    margin={{
+                                        top: 10,
+                                        right: 30,
+                                        left: 10,
+                                        bottom: 0,
+                                    }}
+                                >
+                                    <CartesianGrid horizontal vertical={false} stroke="#29384E" />
+                                    <XAxis dataKey="name" className="text-[12px] text-white" />
+                                    <YAxis
+                                        dataKey={'value'}
+                                        className="text-[12px] text-white"
+                                        domain={[0.98759, 1.08257]}
+                                        tickLine={false}
+                                    />
+                                    <Area type="monotone" dataKey="pv" stroke="#00D26B" fill="#1A262D" />
+                                </AreaChart>
+                            </ResponsiveContainer>
+                            <div className="h-[40px] text-right text-[14px] px-10 flex items-center gap-6 justify-end pb-4">
+                                <div>1W</div>
+                                <div>1M</div>
+                                <div>1Y</div>
+                                <div>ALL</div>
+                            </div>
+                        </div>
+                        <div className="w-[40%]">
+                            <div className="h-fit boxContent p-4 flex justify-center">
+                                <Tabs defaultValue="deposit" className="w-full">
+                                    <TabsList className="w-full p-1 border border-[#f8f8f8]">
+                                        <TabsTrigger
+                                            value="deposit"
+                                            className="w-1/2 bg-transparent rounded-md data-[state=active]:bg-[#242c3c] data-[state=active]:text-white text-[#d9d9d9]"
+                                        >
+                                            <span className="mr-[5px]">
+                                                <IconArrowDown />
+                                            </span>
+                                            Deposit
+                                        </TabsTrigger>
+                                        <TabsTrigger
+                                            value="withdraw"
+                                            className="w-1/2 bg-transparent rounded-md data-[state=active]:bg-[#242c3c] data-[state=active]:text-white text-[#d9d9d9]"
+                                        >
+                                            <span className="mr-[5px]">
+                                                <IconArrowUp />
+                                            </span>
+                                            Withdraw
+                                        </TabsTrigger>
+                                    </TabsList>
+                                    <TabsContent value="deposit">
+                                        <Deposit vaultDetail={vaultDetail} />
+                                    </TabsContent>
+                                    <TabsContent value="withdraw">
+                                        <WithDraw vaultDetail={vaultDetail} />
+                                    </TabsContent>
+                                </Tabs>
+                            </div>
+                            <div className="mt-4 h-fit boxContent p-4">
+                                <p className="text-sm">{vaultDetail.description}</p>
+                                <button
+                                    className="py-[8px] px-[18px] transition-all duration-250 text-center rounded-lg bg-[#15b088] hover:bg-[#2ccda4] m-2"
+                                    onClick={() => seeAddress(vaultDetail.vaultAddress)}
+                                >
+                                    Vault Address
+                                </button>
+                                <button
+                                    className="py-[8px] px-[18px] transition-all duration-250 text-center rounded-lg bg-[#15b088] hover:bg-[#2ccda4] m-2"
+                                    onClick={() => seeAddress(vaultDetail.strategyAddress)}
+                                >
+                                    Strategy Address
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div className="boxContent p-6 h-[120px] flex justify-center flex-col col-span-1">
-                    <h3 className="text-[#d9d9d9] text-[14px] font-medium">Daily APY</h3>
-                    <h2 className="text-[22px] font-semibold">0.469%</h2>
+            )}
+            {!vaultDetail && (
+                <div className="fixed top-0 left-0 right-0 bottom-0 z-10 w-screen h-screen">
+                    <Loading isSignContract />
                 </div>
-                <div className="boxContent p-6 h-[120px] flex justify-center flex-col col-span-1">
-                    <h3 className="text-[#d9d9d9] text-[14px] font-medium">TVL</h3>
-                    <h2 className="text-[22px] font-semibold">$41.29K</h2>
-                </div>
-                <div className="boxContent p-6 h-[120px] flex justify-center flex-col col-span-1">
-                    <h3 className="text-[#d9d9d9] text-[14px] font-medium">Last Harvest</h3>
-                    <h2 className="text-[22px] font-semibold">1h 31m ago</h2>
-                </div>
-            </div>
-            <div></div>
-        </div>
+            )}
+        </>
     );
 };
 

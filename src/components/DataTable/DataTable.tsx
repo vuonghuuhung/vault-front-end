@@ -57,7 +57,9 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                         table.getRowModel().rows.map((row) => (
                             <TableRow
                                 onClick={() => {
-                                    const idVault = row.id;
+                                    // @ts-expect-error id is not in the original object
+                                    const idVault = row.original.id;
+
                                     navigate(`/farms/vault/${idVault}`);
                                 }}
                                 key={row.id}

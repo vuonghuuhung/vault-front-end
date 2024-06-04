@@ -1,3 +1,4 @@
+/* eslint-disable no-constant-condition */
 import { useEffect, useState } from 'react';
 import IconETH from 'src/assets/IconETH';
 import { columnsTable } from 'src/components/ColumnTable/ColumnTable';
@@ -5,19 +6,31 @@ import { DataTable } from 'src/components/DataTable/DataTable';
 import InputSearch from 'src/components/InputSearch';
 import Loading from 'src/components/Loading/Loading';
 import { ToggleGroup, ToggleGroupItem } from 'src/components/ui/toggle-group';
-import { dataTableMock, dataTableType } from 'src/mock/dataTable.mock';
+import { useVault } from 'src/hooks/useVault';
 import useGetValueSearch from 'src/state/valueSearch.ztd';
+import { VaultInfo } from 'src/types/vault.type';
+import { useAccount } from 'wagmi';
+
 const FarmsPage = () => {
+    const account = useAccount();
+
+    const { vaultInfos, isLoading } = useVault({ user: account.address });
+
     const { valueSearch } = useGetValueSearch();
-    const [listDataTableNow, setListDataTableNow] = useState<dataTableType[]>(dataTableMock);
+    const [listDataTableNow, setListDataTableNow] = useState<VaultInfo[] | undefined>(vaultInfos);
     const [totalFilter, setTotalFilter] = useState<string[]>([]);
+
     useEffect(() => {
-        let newList = dataTableMock.filter(
-            (e) =>
-                e.chain.name.toLocaleLowerCase().includes(valueSearch?.trim().toLocaleLowerCase() || '') ||
-                e.chain.description.toLocaleLowerCase().includes(valueSearch?.trim().toLocaleLowerCase() || ''),
-        );
-        setListDataTableNow(newList);
+        if (!vaultInfos) {
+            setListDataTableNow(undefined);
+        } else {
+            const newList = vaultInfos.filter(
+                (e) =>
+                    e.name.toLocaleLowerCase().includes(valueSearch?.trim().toLocaleLowerCase() || '') ||
+                    e.platform[0].toLocaleLowerCase().includes(valueSearch?.trim().toLocaleLowerCase() || ''),
+            );
+            setListDataTableNow(newList);
+        }
         if (valueSearch) {
             setTotalFilter((prev) => {
                 const newTotal = [...prev];
@@ -36,7 +49,7 @@ const FarmsPage = () => {
                 return newTotal;
             });
         }
-    }, [valueSearch]);
+    }, [valueSearch, vaultInfos]);
     return (
         <div>
             <div className="w-full flex items-center justify-between">
@@ -56,11 +69,7 @@ const FarmsPage = () => {
             </div>
             <div className="my-[25px] h-[40px] flex items-center gap-[15px]">
                 <div>
-                    <ToggleGroup
-                        onValueChange={(value) => console.log(value)}
-                        type="single"
-                        className="normalButton !bg-bgButton gap-0 overflow-hidden"
-                    >
+                    <ToggleGroup type="single" className="normalButton !bg-bgButton gap-0 overflow-hidden">
                         <ToggleGroupItem
                             value="AllFarms"
                             aria-label="Toggle bold"
@@ -117,10 +126,12 @@ const FarmsPage = () => {
                 </div>
             </div>
             <div>
-                <DataTable columns={columnsTable} data={listDataTableNow} />
-                {/* <div className="w-full h-[400px]">
-                    <Loading />
-                </div> */}
+                {!isLoading && listDataTableNow && <DataTable columns={columnsTable} data={listDataTableNow} />}
+                {isLoading && (
+                    <div className="w-full h-[400px]">
+                        <Loading />
+                    </div>
+                )}
             </div>
         </div>
     );

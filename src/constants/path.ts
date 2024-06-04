@@ -1,7 +1,8 @@
 const path = {
-    dashBoard: '/',
+    dashBoard: '/dashboard',
     farms: '/farms',
     vaultDetail: '/farms/vault/:id',
+    controller: '/controller'
 } as const;
 
 export default path;
