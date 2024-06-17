@@ -51,8 +51,9 @@ function App() {
                     className: 'bg-black',
                     title: `New Deposit`,
                     description: `${asset} ${tokenSymbol}`,
+                    
                     action: (
-                        <ToastAction
+                        <ToastAction 
                             className="bg-white-500 text-white"
                             altText="Click to see transaction"
                             onClick={() => seeTransaction(log.transactionHash)}

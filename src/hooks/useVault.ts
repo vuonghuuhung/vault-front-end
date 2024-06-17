@@ -15,7 +15,7 @@ export const useVault = ({ address, user }: { address?: string; user?: string })
     const { data: vaultDetail, isLoading: isLoadingDetail, isFetching: isFetchingVaultDetail } = useQuery({
         queryKey: ['vault-detail'],
         queryFn: () => getVaultDetail(address, user),
-        enabled: !!address && !!user,
+        // enabled: !!address && !!user,
     });
 
     return {
@@ -101,6 +101,7 @@ export const getVaultInfos = async (user?: string): Promise<VaultInfo[]> => {
 
 export const getVaultDetail = async (vaultAddress: string | undefined, user?: string): Promise<VaultInfo | null> => {
     try {
+        console.log("refected");
         if (!vaultAddress) {
             return null;
         }

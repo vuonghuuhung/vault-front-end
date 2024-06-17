@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import IconSearch from 'src/assets/IconSearch';
 import useGetValueSearch from 'src/state/valueSearch.ztd';
 

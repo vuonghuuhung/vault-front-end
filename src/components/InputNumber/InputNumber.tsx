@@ -1,5 +1,4 @@
 import { InputHTMLAttributes, forwardRef, useMemo, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
 export interface InputNumberProps extends InputHTMLAttributes<HTMLInputElement> {
     errorsMessage?: string;
     classNameInput?: string;
@@ -21,7 +20,6 @@ const InputNumber = forwardRef<HTMLInputElement, InputNumberProps>(function Inpu
         setLocalValue,
         value = '',
         myMoney = '0',
-        name,
         ...rest
     },
     ref,

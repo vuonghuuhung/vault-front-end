@@ -9,12 +9,18 @@ import { VaultInfo } from 'src/types/vault.type';
 import { useEthersSigner } from 'src/utils/ethers';
 import { formatWithDecimal } from 'src/utils/decimal';
 import bigDecimal from 'js-big-decimal';
+import useStateSignContract from 'src/state/loadingSignContract';
+import { QueryClient } from '@tanstack/react-query';
 
 type FormData = Pick<Schema, 'deposit'>;
 const registerSchema = schema.pick(['deposit']);
 
 const Deposit = ({ vaultDetail }: { vaultDetail: VaultInfo }) => {
+    const queryClient = new QueryClient();
+
     const [localValue, setLocalValue] = useState<string>('');
+
+    const { setIsLoadingSignContract } = useStateSignContract();
 
     const account = useAccount();
     const signer = useEthersSigner({ chainId: 31337 });
@@ -65,6 +71,7 @@ const Deposit = ({ vaultDetail }: { vaultDetail: VaultInfo }) => {
         // console.log({ amount });
 
         if (signer) {
+            setIsLoadingSignContract(true);
             await depositToVault({
                 signer,
                 vaultAddress: vaultDetail.vaultAddress,
@@ -74,6 +81,10 @@ const Deposit = ({ vaultDetail }: { vaultDetail: VaultInfo }) => {
                     decimals: vaultDetail.depositToken.decimal.toString(),
                 },
             });
+            await queryClient.invalidateQueries({
+                queryKey: ['vault-detail']
+            });
+            setIsLoadingSignContract(false);
         }
     });
 
