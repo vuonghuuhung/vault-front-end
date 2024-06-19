@@ -22,7 +22,7 @@ const InputSearch = () => {
                 type="text"
                 value={valueInput}
                 onChange={handleChange}
-                placeholder="Assets, platfor"
+                placeholder="Assets, platform"
                 className="block h-full bg-bgButton flex-1 py-[9px] px-[10px] text-[14px] "
             />
             <button

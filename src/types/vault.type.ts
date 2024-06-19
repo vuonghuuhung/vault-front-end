@@ -61,6 +61,14 @@ export type ControllerInfoInContract = {
     implementationDelay: string;
     universalLiquidator: string;
     rewardForwarder: string;
+
+    tempImplementationDelay: string;
+    tempProfitProtocolNumerator: string;
+    tempProfitStrategistNumerator: string;
+
+    tempImplementationDelayTime: string;
+    tempProfitProtocolNumeratorTime: string;
+    tempProfitStrategistNumeratorTime: string;
 };
 
 export type ControllerInfoInBackend = {

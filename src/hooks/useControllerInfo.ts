@@ -11,9 +11,16 @@ export const useControllerInfo = () => {
         refetchInterval: 2000
     });
 
+    const { data: blockTime } = useQuery({
+        queryKey: ['block-time'],
+        queryFn: () => ContractClient.getBlockTime(),
+        refetchInterval: 2000
+    });
+
     return {
         controllerInfos,
         isLoading,
+        blockTime
     };
 };
 
@@ -22,10 +29,18 @@ export const getControllerInfoFromContract = async (): Promise<ControllerInfoInC
         const controller = ContractClient.getController();
         const implementationDelay = await controller.nextImplementationDelay();
         const profitProtocolNumerator = await controller.platformFeeNumerator();
-        const profitProtocolReceiver = await controller.profitSharingReceiver();
+        const profitProtocolReceiver = await controller.governance();
         const profitStrategistNumerator = await controller.strategistFeeNumerator();
         const rewardForwarder = await controller.rewardForwarder();
         const universalLiquidator = await controller.universalLiquidator();
+
+        const tempImplementationDelay = await controller.tempNextImplementationDelay();
+        const tempProfitProtocolNumerator = await controller.nextPlatformFeeNumerator();
+        const tempProfitStrategistNumerator = await controller.nextStrategistFeeNumerator();
+
+        const tempImplementationDelayTime = await controller.tempNextImplementationDelayTimestamp();
+        const tempProfitProtocolNumeratorTime = await controller.nextPlatformFeeNumeratorTimestamp();
+        const tempProfitStrategistNumeratorTime = await controller.nextStrategistFeeNumeratorTimestamp();
 
         return {
             implementationDelay: implementationDelay.toString(),
@@ -34,6 +49,12 @@ export const getControllerInfoFromContract = async (): Promise<ControllerInfoInC
             profitStrategistNumerator: profitStrategistNumerator.toString(), 
             rewardForwarder: rewardForwarder, 
             universalLiquidator: universalLiquidator, 
+            tempImplementationDelay: tempImplementationDelay.toString(),
+            tempProfitProtocolNumerator: tempProfitProtocolNumerator.toString(),
+            tempProfitStrategistNumerator: tempProfitStrategistNumerator.toString(),
+            tempImplementationDelayTime: tempImplementationDelayTime.toString(),
+            tempProfitProtocolNumeratorTime: tempProfitProtocolNumeratorTime.toString(),
+            tempProfitStrategistNumeratorTime: tempProfitStrategistNumeratorTime.toString(),
         };
     } catch (error) {
         console.error('Error getting vault info from contract', error);

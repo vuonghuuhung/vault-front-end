@@ -1,5 +1,5 @@
 import { ToastAction } from '@radix-ui/react-toast';
-import { ReactNode } from 'react';
+import { useState } from 'react';
 import Loading from 'src/components/Loading/Loading';
 import { toast } from 'src/components/ui/use-toast';
 import { useInvestHistory } from 'src/hooks/useInvestHistory';
@@ -10,6 +10,16 @@ import { doHardWork } from 'src/utils/ContractClient';
 import { useEthersSigner } from 'src/utils/ethers';
 
 const Manage = ({ vaultDetail }: { vaultDetail: VaultInfo }) => {
+    const [selectedTx, setSelectedTx] = useState('');
+
+    const toggleDetails = (txHash: string) => {
+        if (selectedTx === txHash) {
+            setSelectedTx('');
+        } else {
+            setSelectedTx(txHash);
+        }
+    };
+
     const signer = useEthersSigner({ chainId: 31337 });
 
     const { setIsLoadingSignContract } = useStateSignContract();
@@ -83,41 +93,53 @@ const Manage = ({ vaultDetail }: { vaultDetail: VaultInfo }) => {
                     </div>
                     <div className="mt-[25px] flex justify-center gap-6">
                         {historyInfo && (
-                            <div className="p-6 h-auto justify-center max-w-7xl rounded shadow-md">
+                            <div className="p-6 h-auto justify-center w-full rounded shadow-md">
                                 <h1 className="block w-full text-center text-2xl font-bold mb-4 text-white">
                                     Transaction History
                                 </h1>
                                 <div className="flex flex-col space-y-4">
                                     {historyInfo.map((history) => (
-                                        <div
-                                            key={history.txHash}
-                                            className="flex justify-between items-center p-4 border rounded-lg"
-                                            onClick={() => seeTransaction(history.txHash)}
-                                        >
-                                            <div className="w-1/6 text-sm">
-                                                <p className="truncate">{history.txHash}</p>
+                                        <div key={history.txHash} className="flex flex-col p-4 border rounded-lg">
+                                            <div className="flex justify-between items-center">
+                                                <div
+                                                    className="w-2/6 text-sm cursor-pointer"
+                                                    onClick={() => seeTransaction(history.txHash)}
+                                                >
+                                                    <p className="truncate">{history.txHash}</p>
+                                                </div>
+                                                <div className="w-1/6 text-sm">
+                                                    <p>{history.eventName}</p>
+                                                </div>
+                                                <div className="w-1/6 text-sm">
+                                                    <p>{history.date}</p>
+                                                </div>
+                                                <div className="w-1/6 text-sm">
+                                                    <button
+                                                        className="block w-auto py-[8px] px-[18px] transition-all duration-250 text-center rounded-lg bg-[#15b088] hover:bg-[#2ccda4]"
+                                                        onClick={() => toggleDetails(history.txHash)}
+                                                    >
+                                                        {selectedTx === history.txHash
+                                                            ? 'Hide Details'
+                                                            : 'See Distribution detail'}
+                                                    </button>
+                                                </div>
                                             </div>
-                                            <div className="w-1/6 text-sm">
-                                                <p>{history.eventName}</p>
-                                            </div>
-                                            <div className="w-3/6 text-sm flex-1">
+                                            {selectedTx === history.txHash && (
+                                                <div className="text-sm mt-4 p-4 bg-gray-700 rounded-lg">
                                                 {history.logs &&
-                                                    JSON.parse(history.logs).map((log: any, index: any) => (
-                                                        <div key={index}>
+                                                    JSON.parse(history.logs).map((log, index) => (
+                                                        <div key={index} className="mb-4">
                                                             {Object.entries(log).map(([key, value]) => (
-                                                                <p key={key}>
+                                                                <p key={key} className="mb-2">
                                                                     <strong>{key}: </strong>
-                                                                    {value as ReactNode}
+                                                                    {value}
                                                                 </p>
                                                             ))}
-                                                            {index !== JSON.parse(history.logs).length - 1 && <hr />}{' '}
-                                                            {/* Add horizontal line except for the last object */}
+                                                            {index !== JSON.parse(history.logs).length - 1 && <hr className="border-t border-gray-600 my-2" />}
                                                         </div>
                                                     ))}
                                             </div>
-                                            <div className="w-1/6 text-sm">
-                                                <p>{history.date}</p>
-                                            </div>
+                                            )}
                                         </div>
                                     ))}
                                 </div>
