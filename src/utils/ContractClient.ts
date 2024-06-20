@@ -122,29 +122,43 @@ export const withdrawToVault = async ({
 };
 
 export const doHardWork = async ({ signer, vaultAddress }: { signer: Signer; vaultAddress: string }) => {
-    const controller = ContractClient.getController();
-    const tx = await controller.connect(signer).doHardWork(vaultAddress);
-    await tx.wait();
-    console.log(tx.hash);
-    return tx.hash;
+    try {
+        const controller = ContractClient.getController();
+        const tx = await controller.connect(signer).doHardWork(vaultAddress);
+        await tx.wait();
+        console.log(tx.hash);
+        return tx.hash;
+    } catch (error) {
+        console.log('Error doing hard work', (error as any).reason);
+        throw Error((error as any).reason);
+    }
 };
 
 export const addHardWorker = async ({ signer, worker }: { signer: Signer; worker: string }) => {
-    const controller = ContractClient.getController();
-    const tx = await controller.connect(signer).addHardWorker(worker);
-    await tx.wait();
-    console.log(tx.hash);
-    return tx.hash;
+    try {
+        const controller = ContractClient.getController();
+        const tx = await controller.connect(signer).addHardWorker(worker);
+        await tx.wait();
+        console.log(tx.hash);
+        return tx.hash;
+    } catch (error) {
+        throw Error((error as any).reason);
+    }
 };
 
 export const removeHardWorker = async ({ signer, worker }: { signer: Signer; worker: string }) => {
-    const controller = ContractClient.getController();
-    const tx = await controller.connect(signer).removeHardWorker(worker);
-    await tx.wait();
-    console.log(tx.hash);
-    return tx.hash;
+    try {
+        const controller = ContractClient.getController();
+        const tx = await controller.connect(signer).removeHardWorker(worker);
+        await tx.wait();
+        console.log(tx.hash);
+        return tx.hash;
+    } catch (error) {
+        throw Error((error as any).reason);
+    }
 };
 
+// TODO: edit here
 export const addToWhiteList = async ({ signer, address }: { signer: Signer; address: string }) => {
     const controller = ContractClient.getController();
     const tx = await controller.connect(signer).addToWhitelist(address);
@@ -209,35 +223,34 @@ export const confirmImplementationDelay = async ({ signer }: { signer: Signer })
     return tx.hash;
 };
 
-export const setProtocolFeeNumerator = async ({signer, numerator}: {signer: Signer, numerator: string}) => {
+export const setProtocolFeeNumerator = async ({ signer, numerator }: { signer: Signer; numerator: string }) => {
     const controller = ContractClient.getController();
     const tx = await controller.connect(signer).setPlatformFeeNumerator(numerator);
     await tx.wait();
     console.log(tx.hash);
     return tx.hash;
-}
+};
 
-export const setStrategistFeeNumerator = async ({signer, numerator}: {signer: Signer, numerator: string}) => {
+export const setStrategistFeeNumerator = async ({ signer, numerator }: { signer: Signer; numerator: string }) => {
     const controller = ContractClient.getController();
     const tx = await controller.connect(signer).setStrategistFeeNumerator(numerator);
     await tx.wait();
     console.log(tx.hash);
     return tx.hash;
-}
+};
 
-export const confirmProtocolFeeNumerator = async ({signer}: {signer: Signer}) => {
+export const confirmProtocolFeeNumerator = async ({ signer }: { signer: Signer }) => {
     const controller = ContractClient.getController();
     const tx = await controller.connect(signer).confirmSetPlatformFeeNumerator();
     await tx.wait();
     console.log(tx.hash);
     return tx.hash;
-}
+};
 
-export const confirmStrategistFeeNumerator = async ({signer}: {signer: Signer}) => {
+export const confirmStrategistFeeNumerator = async ({ signer }: { signer: Signer }) => {
     const controller = ContractClient.getController();
     const tx = await controller.connect(signer).confirmSetStrategistFeeNumerator();
     await tx.wait();
     console.log(tx.hash);
     return tx.hash;
-}
-
+};

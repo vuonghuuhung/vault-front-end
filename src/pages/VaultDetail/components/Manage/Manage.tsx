@@ -5,9 +5,10 @@ import { toast } from 'src/components/ui/use-toast';
 import { useInvestHistory } from 'src/hooks/useInvestHistory';
 import useStateSignContract from 'src/state/loadingSignContract';
 
-import { VaultInfo } from 'src/types/vault.type';
+import { InvestLog, VaultInfo } from 'src/types/vault.type';
 import { doHardWork } from 'src/utils/ContractClient';
 import { useEthersSigner } from 'src/utils/ethers';
+import InvestHistory from '../InvestHistory';
 
 const Manage = ({ vaultDetail }: { vaultDetail: VaultInfo }) => {
     const [selectedTx, setSelectedTx] = useState('');
@@ -55,12 +56,12 @@ const Manage = ({ vaultDetail }: { vaultDetail: VaultInfo }) => {
                     ),
                 });
             } catch (error) {
-                setIsLoadingSignContract(false);
-                toast({
-                    className: 'bg-red-500',
-                    title: `Invest/Re-invest`,
-                    description: `Failed to invest/re-invest`,
-                });
+                    setIsLoadingSignContract(false);
+                    toast({
+                        className: 'bg-red-500',
+                        title: `Unauthorized`,
+                        description: `${(error as any).message}`,
+                    });
             }
         }
     };
@@ -126,19 +127,26 @@ const Manage = ({ vaultDetail }: { vaultDetail: VaultInfo }) => {
                                             </div>
                                             {selectedTx === history.txHash && (
                                                 <div className="text-sm mt-4 p-4 bg-gray-700 rounded-lg">
-                                                {history.logs &&
-                                                    JSON.parse(history.logs).map((log, index) => (
-                                                        <div key={index} className="mb-4">
-                                                            {Object.entries(log).map(([key, value]) => (
-                                                                <p key={key} className="mb-2">
-                                                                    <strong>{key}: </strong>
-                                                                    {value}
-                                                                </p>
-                                                            ))}
-                                                            {index !== JSON.parse(history.logs).length - 1 && <hr className="border-t border-gray-600 my-2" />}
-                                                        </div>
-                                                    ))}
-                                            </div>
+                                                    {history.parsedLog && (
+                                                        <InvestHistory txHistory={history.parsedLog as InvestLog} />
+                                                    )}
+                                                    <hr className="border-t border-gray-600 my-2" />
+                                                    <p>Raw:</p>
+                                                    {history.logs &&
+                                                        JSON.parse(history.logs).map((log, index) => (
+                                                            <div key={index} className="mb-4 ml-5 mt-2">
+                                                                {Object.entries(log).map(([key, value]) => (
+                                                                    <p key={key} className="mb-2">
+                                                                        <strong>{key}: </strong>
+                                                                        {value}
+                                                                    </p>
+                                                                ))}
+                                                                {index !== JSON.parse(history.logs).length - 1 && (
+                                                                    <hr className="border-t border-gray-600 my-2" />
+                                                                )}
+                                                            </div>
+                                                        ))}
+                                                </div>
                                             )}
                                         </div>
                                     ))}

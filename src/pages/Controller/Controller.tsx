@@ -1,7 +1,10 @@
+import { ToastAction } from '@radix-ui/react-toast';
 import { useState } from 'react';
 import Loading from 'src/components/Loading/Loading';
+import { toast } from 'src/components/ui/use-toast';
 import { useControllerInfo } from 'src/hooks/useControllerInfo';
 import { useStorageInfo } from 'src/hooks/useStorageInfo';
+import useStateSignContract from 'src/state/loadingSignContract';
 import {
     addHardWorker,
     addToWhiteList,
@@ -38,16 +41,48 @@ const Controller = () => {
 
     const signer = useEthersSigner({ chainId: 31337 });
 
+    const { setIsLoadingSignContract } = useStateSignContract();
+
     const seeAddress = (address: string) => {
         // open a new tab to see transaction
         window.open(`https://app.tryethernal.com/address/${address}`);
     };
 
+    const seeTransaction = (txHash: string) => {
+        // open a new tab to see transaction
+        window.open(`https://app.tryethernal.com/transaction/${txHash}`);
+    };
+
     const handleAddHardWorker = async () => {
         try {
             if (signer && newHardWorker != '') {
-                const tx = await addHardWorker({ signer, worker: newHardWorker });
-                console.log(tx);
+                try {
+                    setIsLoadingSignContract(true);
+                    const tx = await addHardWorker({ signer, worker: newHardWorker });
+                    console.log(tx);
+                    setIsLoadingSignContract(false);
+                    toast({
+                        className: 'bg-black',
+                        title: `Invest/Re-invest`,
+                        description: `Successfully invested/re-invested`,
+                        action: (
+                            <ToastAction
+                                className="bg-white-500 text-white"
+                                altText="Click to see transaction"
+                                onClick={() => seeTransaction(tx)}
+                            >
+                                See transaction
+                            </ToastAction>
+                        ),
+                    });
+                } catch (error) {
+                    setIsLoadingSignContract(false);
+                    toast({
+                        className: 'bg-red-500',
+                        title: `Unauthorized`,
+                        description: `${(error as any).message}`,
+                    });
+                }
             }
         } catch (error) {
             console.error('Error adding hard worker', error);
@@ -57,143 +92,468 @@ const Controller = () => {
     const handleSetNewImplementationDelay = async () => {
         try {
             if (signer && newImplementationDelay != '') {
-                const tx = await setImplementationDelay({ signer, delay: newImplementationDelay });
-                console.log(tx);
+                try {
+                    setIsLoadingSignContract(true);
+                    const tx = await setImplementationDelay({ signer, delay: newImplementationDelay });
+                    console.log(tx);
+                    setIsLoadingSignContract(false);
+                    toast({
+                        className: 'bg-black',
+                        title: `Invest/Re-invest`,
+                        description: `Successfully invested/re-invested`,
+                        action: (
+                            <ToastAction
+                                className="bg-white-500 text-white"
+                                altText="Click to see transaction"
+                                onClick={() => seeTransaction(tx)}
+                            >
+                                See transaction
+                            </ToastAction>
+                        ),
+                    });
+                } catch (error) {
+                    setIsLoadingSignContract(false);
+                    toast({
+                        className: 'bg-red-500',
+                        title: `Unauthorized`,
+                        description: `${(error as any).message}`,
+                    });
+                }
             }
         } catch (error) {
-            console.error('Error setting new implementation delay', error);
+            console.error('Error adding hard worker', error);
         }
     };
 
     const handleSetNewProtocolFeeNumerator = async () => {
         try {
             if (signer && newProtocolFeeNumerator != '') {
-                const tx = await setProtocolFeeNumerator({ signer, numerator: newProtocolFeeNumerator });
-                console.log(tx);
+                try {
+                    setIsLoadingSignContract(true);
+                    const tx = await setProtocolFeeNumerator({ signer, numerator: newProtocolFeeNumerator });
+                    console.log(tx);
+                    setIsLoadingSignContract(false);
+                    toast({
+                        className: 'bg-black',
+                        title: `Invest/Re-invest`,
+                        description: `Successfully invested/re-invested`,
+                        action: (
+                            <ToastAction
+                                className="bg-white-500 text-white"
+                                altText="Click to see transaction"
+                                onClick={() => seeTransaction(tx)}
+                            >
+                                See transaction
+                            </ToastAction>
+                        ),
+                    });
+                } catch (error) {
+                    setIsLoadingSignContract(false);
+                    toast({
+                        className: 'bg-red-500',
+                        title: `Unauthorized`,
+                        description: `${(error as any).message}`,
+                    });
+                }
             }
         } catch (error) {
-            console.error('Error setting new protocol fee numerator', error);
+            console.error('Error adding hard worker', error);
         }
     };
 
     const handleSetNewStrategistFeeNumerator = async () => {
         try {
             if (signer && newStrategistFeeNumerator != '') {
-                const tx = await setStrategistFeeNumerator({ signer, numerator: newStrategistFeeNumerator });
-                console.log(tx);
+                try {
+                    setIsLoadingSignContract(true);
+                    const tx = await setStrategistFeeNumerator({ signer, numerator: newStrategistFeeNumerator });
+                    console.log(tx);
+                    setIsLoadingSignContract(false);
+                    toast({
+                        className: 'bg-black',
+                        title: `Invest/Re-invest`,
+                        description: `Successfully invested/re-invested`,
+                        action: (
+                            <ToastAction
+                                className="bg-white-500 text-white"
+                                altText="Click to see transaction"
+                                onClick={() => seeTransaction(tx)}
+                            >
+                                See transaction
+                            </ToastAction>
+                        ),
+                    });
+                } catch (error) {
+                    setIsLoadingSignContract(false);
+                    toast({
+                        className: 'bg-red-500',
+                        title: `Unauthorized`,
+                        description: `${(error as any).message}`,
+                    });
+                }
             }
         } catch (error) {
-            console.error('Error setting new strategist fee numerator', error);
+            console.error('Error adding hard worker', error);
         }
     };
 
     const handleConfirmNewProtocolFeeNumerator = async () => {
         try {
             if (signer) {
-                const tx = await confirmProtocolFeeNumerator({ signer });
-                console.log(tx);
+                try {
+                    setIsLoadingSignContract(true);
+                    const tx = await confirmProtocolFeeNumerator({ signer });
+                    console.log(tx);
+                    setIsLoadingSignContract(false);
+                    toast({
+                        className: 'bg-black',
+                        title: `Invest/Re-invest`,
+                        description: `Successfully invested/re-invested`,
+                        action: (
+                            <ToastAction
+                                className="bg-white-500 text-white"
+                                altText="Click to see transaction"
+                                onClick={() => seeTransaction(tx)}
+                            >
+                                See transaction
+                            </ToastAction>
+                        ),
+                    });
+                } catch (error) {
+                    setIsLoadingSignContract(false);
+                    toast({
+                        className: 'bg-red-500',
+                        title: `Unauthorized`,
+                        description: `${(error as any).message}`,
+                    });
+                }
             }
         } catch (error) {
-            console.error('Error confirming new protocol fee numerator', error);
+            console.error('Error adding hard worker', error);
         }
     };
 
     const handleConfirmNewStrategistFeeNumerator = async () => {
         try {
             if (signer) {
-                const tx = await confirmStrategistFeeNumerator({ signer });
-                console.log(tx);
+                try {
+                    setIsLoadingSignContract(true);
+                    const tx = await confirmStrategistFeeNumerator({ signer });
+                    console.log(tx);
+                    setIsLoadingSignContract(false);
+                    toast({
+                        className: 'bg-black',
+                        title: `Invest/Re-invest`,
+                        description: `Successfully invested/re-invested`,
+                        action: (
+                            <ToastAction
+                                className="bg-white-500 text-white"
+                                altText="Click to see transaction"
+                                onClick={() => seeTransaction(tx)}
+                            >
+                                See transaction
+                            </ToastAction>
+                        ),
+                    });
+                } catch (error) {
+                    setIsLoadingSignContract(false);
+                    toast({
+                        className: 'bg-red-500',
+                        title: `Unauthorized`,
+                        description: `${(error as any).message}`,
+                    });
+                }
             }
         } catch (error) {
-            console.error('Error confirming new strategist fee numerator', error);
+            console.error('Error adding hard worker', error);
         }
     };
 
     const handleRemoveHardWorker = async () => {
         try {
             if (signer && removeNewHardWorker != '') {
-                const tx = await removeHardWorker({ signer, worker: removeNewHardWorker });
-                console.log(tx);
+                try {
+                    setIsLoadingSignContract(true);
+                    const tx = await removeHardWorker({ signer, worker: removeNewHardWorker });
+                    console.log(tx);
+                    setIsLoadingSignContract(false);
+                    toast({
+                        className: 'bg-black',
+                        title: `Invest/Re-invest`,
+                        description: `Successfully invested/re-invested`,
+                        action: (
+                            <ToastAction
+                                className="bg-white-500 text-white"
+                                altText="Click to see transaction"
+                                onClick={() => seeTransaction(tx)}
+                            >
+                                See transaction
+                            </ToastAction>
+                        ),
+                    });
+                } catch (error) {
+                    setIsLoadingSignContract(false);
+                    toast({
+                        className: 'bg-red-500',
+                        title: `Unauthorized`,
+                        description: `${(error as any).message}`,
+                    });
+                }
             }
         } catch (error) {
-            console.error('Error removing hard worker', error);
+            console.error('Error adding hard worker', error);
         }
     };
 
     const handleSetNewUniversalLiquidator = async () => {
         try {
             if (signer && newUniversalLiquidator != '') {
-                const tx = await setUniversalLiquidator({ signer, address: newUniversalLiquidator });
-                console.log(tx);
+                try {
+                    setIsLoadingSignContract(true);
+                    const tx = await setUniversalLiquidator({ signer, address: newUniversalLiquidator });
+                    console.log(tx);
+                    setIsLoadingSignContract(false);
+                    toast({
+                        className: 'bg-black',
+                        title: `Invest/Re-invest`,
+                        description: `Successfully invested/re-invested`,
+                        action: (
+                            <ToastAction
+                                className="bg-white-500 text-white"
+                                altText="Click to see transaction"
+                                onClick={() => seeTransaction(tx)}
+                            >
+                                See transaction
+                            </ToastAction>
+                        ),
+                    });
+                } catch (error) {
+                    setIsLoadingSignContract(false);
+                    toast({
+                        className: 'bg-red-500',
+                        title: `Unauthorized`,
+                        description: `${(error as any).message}`,
+                    });
+                }
             }
         } catch (error) {
-            console.error('Error setting new universal liquidator', error);
+            console.error('Error adding hard worker', error);
         }
     };
 
     const handleSetNewRewardForwarder = async () => {
         try {
             if (signer && newRewardForwarder != '') {
-                const tx = await setRewardForwarder({ signer, address: newRewardForwarder });
-                console.log(tx);
+                try {
+                    setIsLoadingSignContract(true);
+                    const tx = await setRewardForwarder({ signer, address: newRewardForwarder });
+                    console.log(tx);
+                    setIsLoadingSignContract(false);
+                    toast({
+                        className: 'bg-black',
+                        title: `Invest/Re-invest`,
+                        description: `Successfully invested/re-invested`,
+                        action: (
+                            <ToastAction
+                                className="bg-white-500 text-white"
+                                altText="Click to see transaction"
+                                onClick={() => seeTransaction(tx)}
+                            >
+                                See transaction
+                            </ToastAction>
+                        ),
+                    });
+                } catch (error) {
+                    setIsLoadingSignContract(false);
+                    toast({
+                        className: 'bg-red-500',
+                        title: `Unauthorized`,
+                        description: `${(error as any).message}`,
+                    });
+                }
             }
         } catch (error) {
-            console.error('Error setting new reward forwarder', error);
+            console.error('Error adding hard worker', error);
         }
     };
 
     const handleSetNewGovernance = async () => {
         try {
             if (signer && newGovernance != '') {
-                const tx = await setGovernance({ signer, address: newGovernance });
-                console.log(tx);
+                try {
+                    setIsLoadingSignContract(true);
+                    const tx = await setGovernance({ signer, address: newGovernance });
+                    console.log(tx);
+                    setIsLoadingSignContract(false);
+                    toast({
+                        className: 'bg-black',
+                        title: `Invest/Re-invest`,
+                        description: `Successfully invested/re-invested`,
+                        action: (
+                            <ToastAction
+                                className="bg-white-500 text-white"
+                                altText="Click to see transaction"
+                                onClick={() => seeTransaction(tx)}
+                            >
+                                See transaction
+                            </ToastAction>
+                        ),
+                    });
+                } catch (error) {
+                    setIsLoadingSignContract(false);
+                    toast({
+                        className: 'bg-red-500',
+                        title: `Unauthorized`,
+                        description: `${(error as any).message}`,
+                    });
+                }
             }
         } catch (error) {
-            console.error('Error setting new governance', error);
+            console.error('Error adding hard worker', error);
         }
     };
 
     const handleSetNewController = async () => {
         try {
             if (signer && newController != '') {
-                const tx = await setController({ signer, address: newController });
-                console.log(tx);
+                try {
+                    setIsLoadingSignContract(true);
+                    const tx = await setController({ signer, address: newController });
+                    console.log(tx);
+                    setIsLoadingSignContract(false);
+                    toast({
+                        className: 'bg-black',
+                        title: `Invest/Re-invest`,
+                        description: `Successfully invested/re-invested`,
+                        action: (
+                            <ToastAction
+                                className="bg-white-500 text-white"
+                                altText="Click to see transaction"
+                                onClick={() => seeTransaction(tx)}
+                            >
+                                See transaction
+                            </ToastAction>
+                        ),
+                    });
+                } catch (error) {
+                    setIsLoadingSignContract(false);
+                    toast({
+                        className: 'bg-red-500',
+                        title: `Unauthorized`,
+                        description: `${(error as any).message}`,
+                    });
+                }
             }
         } catch (error) {
-            console.error('Error setting new controller', error);
+            console.error('Error adding hard worker', error);
         }
     };
 
     const handleAddToWhiteList = async () => {
         try {
             if (signer && newAddress != '') {
-                const tx = await addToWhiteList({ signer, address: newAddress });
-                console.log(tx);
+                try {
+                    setIsLoadingSignContract(true);
+                    const tx = await addToWhiteList({ signer, address: newAddress });
+                    console.log(tx);
+                    setIsLoadingSignContract(false);
+                    toast({
+                        className: 'bg-black',
+                        title: `Invest/Re-invest`,
+                        description: `Successfully invested/re-invested`,
+                        action: (
+                            <ToastAction
+                                className="bg-white-500 text-white"
+                                altText="Click to see transaction"
+                                onClick={() => seeTransaction(tx)}
+                            >
+                                See transaction
+                            </ToastAction>
+                        ),
+                    });
+                } catch (error) {
+                    setIsLoadingSignContract(false);
+                    toast({
+                        className: 'bg-red-500',
+                        title: `Unauthorized`,
+                        description: `${(error as any).message}`,
+                    });
+                }
             }
         } catch (error) {
-            console.error('Error adding to white list', error);
+            console.error('Error adding hard worker', error);
         }
     };
 
     const handleRemoveFromWhiteList = async () => {
         try {
             if (signer && removeAddress != '') {
-                const tx = await removeFromWhiteList({ signer, address: removeAddress });
-                console.log(tx);
+                try {
+                    setIsLoadingSignContract(true);
+                    const tx = await removeFromWhiteList({ signer, address: removeAddress });
+                    console.log(tx);
+                    setIsLoadingSignContract(false);
+                    toast({
+                        className: 'bg-black',
+                        title: `Invest/Re-invest`,
+                        description: `Successfully invested/re-invested`,
+                        action: (
+                            <ToastAction
+                                className="bg-white-500 text-white"
+                                altText="Click to see transaction"
+                                onClick={() => seeTransaction(tx)}
+                            >
+                                See transaction
+                            </ToastAction>
+                        ),
+                    });
+                } catch (error) {
+                    setIsLoadingSignContract(false);
+                    toast({
+                        className: 'bg-red-500',
+                        title: `Unauthorized`,
+                        description: `${(error as any).message}`,
+                    });
+                }
             }
         } catch (error) {
-            console.error('Error removing from white list', error);
+            console.error('Error adding hard worker', error);
         }
     };
 
     const handleConfirmNewImplementationDelay = async () => {
         try {
             if (signer) {
-                const tx = await confirmImplementationDelay({ signer });
-                console.log(tx);
+                try {
+                    setIsLoadingSignContract(true);
+                    const tx = await confirmImplementationDelay({ signer });
+                    console.log(tx);
+                    setIsLoadingSignContract(false);
+                    toast({
+                        className: 'bg-black',
+                        title: `Invest/Re-invest`,
+                        description: `Successfully invested/re-invested`,
+                        action: (
+                            <ToastAction
+                                className="bg-white-500 text-white"
+                                altText="Click to see transaction"
+                                onClick={() => seeTransaction(tx)}
+                            >
+                                See transaction
+                            </ToastAction>
+                        ),
+                    });
+                } catch (error) {
+                    setIsLoadingSignContract(false);
+                    toast({
+                        className: 'bg-red-500',
+                        title: `Unauthorized`,
+                        description: `${(error as any).message}`,
+                    });
+                }
             }
         } catch (error) {
-            console.error('Error setting new implementation delay', error);
+            console.error('Error adding hard worker', error);
         }
     };
 
@@ -353,7 +713,8 @@ const Controller = () => {
                                             onClick={handleConfirmNewProtocolFeeNumerator}
                                             className="grid place-items-center px-[18px] py-2 bg-[#15b088] hover:bg-[#2ccda4] h-full"
                                             disabled={
-                                                Number(controllerInfos.tempProfitProtocolNumeratorTime) >= Number(blockTime)
+                                                Number(controllerInfos.tempProfitProtocolNumeratorTime) >=
+                                                Number(blockTime)
                                             }
                                         >
                                             Confirm new numerator
@@ -407,7 +768,8 @@ const Controller = () => {
                                             onClick={handleConfirmNewStrategistFeeNumerator}
                                             className="grid place-items-center px-[18px] py-2 bg-[#15b088] hover:bg-[#2ccda4] h-full"
                                             disabled={
-                                                Number(controllerInfos.tempProfitProtocolNumeratorTime) >= Number(blockTime)
+                                                Number(controllerInfos.tempProfitProtocolNumeratorTime) >=
+                                                Number(blockTime)
                                             }
                                         >
                                             Confirm new numerator

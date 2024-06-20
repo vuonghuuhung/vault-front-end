@@ -99,6 +99,7 @@ export type TxHistory = {
     to: string;
     date: string;
     logs: string;
+    parsedLog: DepositWithdrawLog | InvestLog | null;
 };
 
 export type SharePriceChartData = {
@@ -106,3 +107,43 @@ export type SharePriceChartData = {
     sharePrice: string;
     timestamp: string;
 };
+
+export type DepositWithdrawLog = {
+    depositor: string;
+    assets: string;
+    shares: string;
+    shareSymbol: string;
+    assetSymbol: string; 
+}
+
+export type InvestLog = {
+    vaultInfo: VaultInfoChange;
+    platformInfo: PlatformChangeLog;
+    strategistInfo: StrategistChangeLog;
+    rewardSymbol: string;
+    rewardBalance: string;
+}
+
+export type VaultInfoChange = {
+    newSharePrice: string;
+    oldSharePrice: string;
+    strategy: string;
+    timestamp: string;
+    vault: string;
+}
+
+export type PlatformChangeLog = {
+    platformFee: string;
+    platformFeeRecipient: string;
+    rewardBalance: string;
+    rewardToken: string;
+    timestamp: string;
+}
+
+export type StrategistChangeLog = {
+    rewardBalance: string;
+    rewardToken: string;
+    strategistFee: string;
+    timestamp: string;
+    strategist: string | null;
+}
